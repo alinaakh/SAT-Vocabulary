@@ -181,7 +181,17 @@ const $$=s=>document.querySelectorAll(s);
 let lvl=0, deck=[], i=0, flipped=false, order='shuffle', curGroup=null;
 
 function shuffle(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
-function hl(s,w){const stem=w.slice(0,Math.max(4,w.length-2));const re=new RegExp('\\\\b('+stem.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\\\$&')+'[a-z]*)\\\\b','i');return s.replace(re,'<u>$1</u>')}
+function hl(s,w){
+  const stem=w.slice(0,Math.max(4,w.length-2)).toLowerCase();
+  const lower=s.toLowerCase();
+  const pos=lower.indexOf(stem);
+  if(pos<0) return s;
+  let end=pos;
+  while(end<s.length && /[a-z]/i.test(s[end])) end++;
+  let start=pos;
+  while(start>0 && /[a-z]/i.test(s[start-1])) start--;
+  return s.slice(0,start)+'<u>'+s.slice(start,end)+'</u>'+s.slice(end);
+}
 function posLabel(p){return ({'v.':'verb','n.':'noun','adj.':'adjective','adv.':'adverb'})[p]||p}
 function tierName(t){return ({1:'basic',2:'intermediate',3:'advanced'})[t]||''}
 
